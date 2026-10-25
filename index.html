@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小日子</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4efe6;--card:#fbf8f2;--ink:#3d3a35;--mute:#8a8378;--line:#d9d0c0;--sage:#7d8f77;--clay:#b5765a;--sand:#e9e1d0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "Noto Serif TC","Songti TC","PMingLiU",serif;padding:env(safe-area-inset-top,0) 0 40px}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+header{text-align:center;padding:42px 0 18px}
+h1{font-weight:400;letter-spacing:.5em;font-size:28px;margin:0}
+.ctl{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:14px;display:flex;gap:8px;z-index:5}
+.ctl button{background:var(--card)}.ctl button:hover{background:var(--ink)}.ctl .pri{background:var(--clay)}
+.tabs.sub{margin:0 0 18px;border:none}.tabs.sub button{border:1px solid var(--line);margin:0 2px}.tabs.sub button.on{background:var(--sand)}
+.pie{display:flex;gap:26px;flex-wrap:wrap;align-items:center;justify-content:center}
+.lg{flex:1;min-width:240px}.lg div{display:flex;gap:10px;align-items:center;padding:3px 0;border-bottom:1px dashed var(--line);font-size:14px}.lg i{width:11px;height:11px;border-radius:50%;flex:none}.lg b{width:78px;text-align:right;font-weight:400;font-variant-numeric:tabular-nums}.lg u{margin-left:auto;width:66px;text-align:right;text-decoration:none;color:var(--mute);font-variant-numeric:tabular-nums}
+.tip{border-left:3px solid var(--clay);background:var(--sand);padding:5px 12px;margin-top:12px;font-size:13px}
+.kv{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;padding:6px 2px;border-bottom:1px dashed var(--line)}.kv b{font-weight:600;font-variant-numeric:tabular-nums}.kv small{font-weight:400;color:var(--mute);margin-left:3px}.kv .note{flex-basis:100%}.lg em{color:var(--mute);font-style:normal;width:52px;text-align:right;font-size:13px}
+.sub{color:var(--mute);font-size:13px;letter-spacing:.2em;margin-top:6px}
+.bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0 4px;align-items:center}
+button{font:inherit;font-size:13px;border:1px solid var(--ink);background:none;color:var(--ink);padding:3px 14px;border-radius:2px;cursor:pointer;letter-spacing:.1em}
+button:hover{background:var(--ink);color:var(--bg)}
+button.pri{background:var(--clay);border-color:var(--clay);color:#fff}
+button.x{border:none;color:var(--clay);padding:0 6px}
+.tabs{display:flex;justify-content:center;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin:18px 0 26px}
+.tabs button{border:none;border-bottom:2px solid transparent;padding:6px 14px;color:var(--mute)}
+.tabs button.on{color:var(--ink);border-color:var(--clay);background:none}
+section{background:var(--card);border:1px solid var(--line);padding:20px 22px;margin-bottom:24px;box-shadow:3px 3px 0 var(--sand)}
+h2{font-weight:600;font-size:16px;letter-spacing:.3em;margin:0 0 12px;color:var(--clay)}
+h2 small{color:var(--mute);font-weight:400;letter-spacing:.05em;margin-left:8px;font-size:12px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font-weight:400;color:var(--mute);text-align:left;border-bottom:1px solid var(--ink);padding:5px 8px;white-space:nowrap;font-size:13px}
+td{padding:5px 8px;border-bottom:1px dashed var(--line);vertical-align:middle}
+.r{text-align:right;font-variant-numeric:tabular-nums}
+tr.tot td{border-top:1px solid var(--ink);border-bottom:none;font-weight:600}
+input,select{font:inherit;font-size:14px;width:100%;min-width:70px;border:none;border-bottom:1px solid var(--sage);background:#fff8;padding:2px 4px;color:var(--ink)}
+input[type=number]{text-align:right}
+.note{color:var(--mute);font-size:12px;white-space:pre-line}
+.bar2{height:6px;background:var(--sand);min-width:80px}.bar2 i{display:block;height:100%;background:var(--sage)}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.chips span{border:1px solid var(--line);padding:2px 12px;font-size:13px}
+.msg{text-align:center;color:var(--mute);font-size:13px;min-height:20px}
+#msg{color:var(--mute);font-size:12px;align-self:center;max-width:52vw;text-align:right;line-height:1.3;background:var(--bg);padding:0 4px}
+.ic{vertical-align:-3px;margin-right:6px;flex:none}
+.add{margin-top:10px}
+dialog{border:1px solid var(--ink);background:var(--card);color:var(--ink);padding:22px;font-family:inherit}
+dialog::backdrop{background:#3d3a3566}
+</style>
+</head>
+<body>
+<div class="ctl"><span id="msg"></span><button id="bRef">重新整理</button></div>
+<div class="wrap">
+<header>
+<h1>小日子</h1>
+<div class="sub">慢慢記，慢慢算，日子就會有餘裕</div>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<main id="main"></main>
+</div>
+<script>
+// ===== 設定：貼上 Apps Script 網頁應用程式網址（留空則顯示示範資料、無法編輯）=====
+const API_URL='https://script.google.com/macros/s/AKfycbwystUKruZvSdwkgN8OaDzb64fm-sT4UagSeq4UPxK2PLvxAFa359mDlqH1S2Oz_0XGXA/exec';
+// ====================================================================
+const SEED={"income": [{"項目": "薪水", "金額": 45000, "倍數": 12, "備註": ""}, {"項目": "季獎金", "金額": 10000, "倍數": 3, "備註": ""}, {"項目": "年終", "金額": 45000, "倍數": 1, "備註": ""}], "expense": [{"類別": "貸款", "項目": "學貸", "月支出": 3000, "年支出": 36000, "銀行": "台灣銀行"}, {"類別": "貸款", "項目": "房貸", "月支出": 3000, "年支出": 36000, "銀行": "華南銀行"}, {"類別": "貸款", "項目": "房屋稅", "月支出": "", "年支出": 2000, "銀行": "華南銀行"}, {"類別": "保險、保養、保健", "項目": "醫療險", "月支出": 3200, "年支出": 38400, "銀行": "國泰世華"}, {"類別": "保險、保養、保健", "項目": "癌症險", "月支出": 1000, "年支出": 12000, "銀行": "新光銀行"}, {"類別": "保險、保養、保健", "項目": "媽保健", "月支出": 2000, "年支出": 24000, "銀行": "華南銀行"}, {"類別": "保險、保養、保健", "項目": "媽壽險", "月支出": 1000, "年支出": 12000, "銀行": "國泰世華"}, {"類別": "保險、保養、保健", "項目": "爸儲蓄壽險", "月支出": 3000, "年支出": 36000, "銀行": "新光銀行"}, {"類別": "保險、保養、保健", "項目": "手機保險", "月支出": 300, "年支出": 3600, "銀行": "華南銀行"}, {"類別": "保險、保養、保健", "項目": "機車保養", "月支出": 800, "年支出": 9600, "銀行": "暫存信封"}, {"類別": "保險、保養、保健", "項目": "勞健保", "月支出": 2000, "年支出": 24000, "銀行": "合作金庫"}, {"類別": "生活費", "項目": "房租", "月支出": 5500, "年支出": 66000, "銀行": "郵局"}, {"類別": "生活費", "項目": "電費", "月支出": 800, "年支出": 9600, "銀行": "郵局"}, {"類別": "生活費", "項目": "公電、水費", "月支出": 200, "年支出": 2400, "銀行": "郵局"}, {"類別": "生活費", "項目": "手機費", "月支出": 600, "年支出": 7200, "銀行": "郵局"}, {"類別": "生活費", "項目": "油錢", "月支出": 600, "年支出": 6000, "銀行": "郵局"}, {"類別": "生活費", "項目": "生活用品", "月支出": 800, "年支出": 9600, "銀行": "郵局"}, {"類別": "生活費", "項目": "三餐", "月支出": 7000, "年支出": 84000, "銀行": "現金"}, {"類別": "生活費", "項目": "中餐(上班)", "月支出": 2500, "年支出": 30000, "銀行": "合作金庫"}, {"類別": "學習", "項目": "吉他團費", "月支出": 600, "年支出": 7200, "銀行": "台灣銀行"}, {"類別": "學習", "項目": "吉他學費", "月支出": 1000, "年支出": 12000, "銀行": "台灣銀行"}, {"類別": "娛樂費", "項目": "YT軟體", "月支出": 200, "年支出": 2400, "銀行": "合作金庫"}, {"類別": "娛樂費", "項目": "YT黑音會員", "月支出": 100, "年支出": 1200, "銀行": "合作金庫"}, {"類別": "娛樂費", "項目": "剪頭髮", "月支出": 100, "年支出": 1200, "銀行": "郵局"}, {"類別": "娛樂費", "項目": "健身房(含蛋白飲)", "月支出": 2000, "年支出": 24000, "銀行": "新光銀行"}, {"類別": "儲蓄", "項目": "勞退自提撥", "月支出": 1600, "年支出": 19200, "銀行": "合作金庫"}, {"類別": "儲蓄", "項目": "股票", "月支出": 1000, "年支出": 12000, "銀行": "新光銀行"}], "bonus": [{"類別": "保險、保養、保健", "項目": "Ｂ群", "年額": 3600, "來源": "季獎金", "銀行": "郵局"}, {"類別": "娛樂費", "項目": "爸媽生日禮物", "年額": 1000, "來源": "季獎金", "銀行": "華南銀行"}, {"類別": "娛樂費", "項目": "爸媽節日禮物", "年額": 500, "來源": "季獎金", "銀行": "華南銀行"}, {"類別": "娛樂費", "項目": "生日旅遊", "年額": 8000, "來源": "季獎金", "銀行": "國泰世華"}, {"類別": "娛樂費", "項目": "旅遊基金", "年額": 12000, "來源": "季獎金", "銀行": "國泰世華"}, {"類別": "娛樂費", "項目": "年貨", "年額": 1500, "來源": "年終", "銀行": "現金"}, {"類別": "娛樂費", "項目": "過年娛樂", "年額": 5000, "來源": "年終", "銀行": "現金"}, {"類別": "孝親費", "項目": "爸媽過年紅包", "年額": 24000, "來源": "年終", "銀行": "現金"}, {"類別": "學習", "項目": "吉他弦", "年額": 1800, "來源": "季獎金", "銀行": "台灣銀行"}, {"類別": "學習", "項目": "吉他表演費", "年額": 2400, "來源": "季獎金", "銀行": "台灣銀行"}, {"類別": "儲蓄", "項目": "股票", "年額": 10000, "來源": "年終", "銀行": "新光銀行"}], "supplies": [{"項目": "沐浴乳", "單價": 150, "次數": 4}, {"項目": "洗髮精", "單價": 150, "次數": 3}, {"項目": "洗面乳", "單價": 100, "次數": 12}, {"項目": "牙膏", "單價": 110, "次數": 2}, {"項目": "洗衣粉", "單價": 120, "次數": 3}, {"項目": "洗手乳", "單價": 50, "次數": 4}, {"項目": "潤髮乳", "單價": 150, "次數": 2}, {"項目": "洗衣服", "單價": 20, "次數": 104}, {"項目": "面紙", "單價": 150, "次數": 4}, {"項目": "衛生棉", "單價": 300, "次數": 12}], "moto": [{"項目": "機油", "單價": 200, "次數": 12, "備註": ""}, {"項目": "齒輪油", "單價": 100, "次數": 6, "備註": ""}, {"項目": "濾清器", "單價": 250, "次數": 2, "備註": ""}, {"項目": "大保養", "單價": 1500, "次數": 1, "備註": "10000做900保養\n50000做2200保養"}, {"項目": "輪胎", "單價": 1300, "次數": 1, "備註": "前輪兩年換一次\n後輪一年半換一次"}, {"項目": "耗材", "單價": 300, "次數": 1, "備註": ""}, {"項目": "強制險、責任險", "單價": 2400, "次數": 1, "備註": ""}, {"項目": "燃料稅", "單價": 600, "次數": 1, "備註": ""}], "banks": [{"銀行": "國泰世華", "每月領出": 4500}, {"銀行": "台灣銀行", "每月領出": 4500}, {"銀行": "華南銀行", "每月領出": 5000}, {"銀行": "新光銀行", "每月領出": 7000}, {"銀行": "郵局", "每月領出": 8000}, {"銀行": "現金", "每月領出": 7000}, {"銀行": "暫存信封", "每月領出": 1500}, {"銀行": "合作金庫", "每月領出": 0}], "categories": [{"類別": "貸款"}, {"類別": "保險、保養、保健"}, {"類別": "生活費"}, {"類別": "娛樂費"}, {"類別": "學習"}, {"類別": "孝親費"}, {"類別": "儲蓄"}], "sources": [{"來源": "季獎金"}, {"來源": "年終"}], "rincome": [{"項目": "老年給付", "月收入": 4000, "倍數": 12, "備註": ""}, {"項目": "勞退", "月收入": 14500, "倍數": 12, "備註": ""}, {"項目": "定存", "月收入": 6500, "倍數": 30, "備註": "35歲開始月存；年收入＝月收入×30"}], "rexpense": [{"大類別": "生活費", "類別": "", "項目": "手機費", "月支出": 700, "年支出": 8400}, {"大類別": "保險、保養、保健", "類別": "保健", "項目": "綜合維他命", "月支出": 1500, "年支出": 18000}, {"大類別": "保險、保養、保健", "類別": "保健", "項目": "醫療", "月支出": 5000, "年支出": 60000}, {"大類別": "生活費", "類別": "租屋", "項目": "房租", "月支出": 10000, "年支出": 120000}, {"大類別": "生活費", "類別": "租屋", "項目": "水費", "月支出": 500, "年支出": 6000}, {"大類別": "生活費", "類別": "租屋", "項目": "電費", "月支出": 1000, "年支出": 12000}, {"大類別": "生活費", "類別": "租屋", "項目": "生活用品", "月支出": 1000, "年支出": 12000}, {"大類別": "生活費", "類別": "機車", "項目": "油錢", "月支出": 300, "年支出": 3600}, {"大類別": "生活費", "類別": "機車", "項目": "機油保養", "月支出": 1000, "年支出": 12000}, {"大類別": "娛樂費", "類別": "娛樂費", "項目": "旅遊", "月支出": 3000, "年支出": 36000}, {"大類別": "生活費", "類別": "飲食", "項目": "三餐", "月支出": 10000, "年支出": 120000}], "rtable": [{"月薪": 32000, "每月需自存": 6000}, {"月薪": 35000, "每月需自存": 5000}, {"月薪": 38000, "每月需自存": 0}], "pension": [{"區塊": "老年給付", "項目": "試算日期", "數值": "20261025", "單位": "", "備註": ""}, {"區塊": "老年給付", "項目": "預計申請年月", "數值": "146/01", "單位": "", "備註": ""}, {"區塊": "老年給付", "項目": "預計申請年齡", "數值": "65歲11月", "單位": "", "備註": ""}, {"區塊": "老年給付", "項目": "年資計算", "數值": "自 100/07/04 起至 145/12/31 止", "單位": "", "備註": ""}, {"區塊": "老年給付", "項目": "投保年資", "數值": "043年00月", "單位": "", "備註": ""}, {"區塊": "老年給付", "項目": "一次給付年資", "數值": "035年00月", "單位": "", "備註": ""}, {"區塊": "老年給付", "項目": "同一證號年資", "數值": "40年35日", "單位": "", "備註": ""}, {"區塊": "老年給付", "項目": "平均月投保薪資", "數值": "45800", "單位": "元", "備註": "投保期間最高60個月之月投保薪資計算"}, {"區塊": "老年給付", "項目": "第1式", "數值": "18935", "單位": "元", "備註": "[(45,800x43.00x0.775%+3,000)x(1+3.68%)]"}, {"區塊": "老年給付", "項目": "第2式", "數值": "31649", "單位": "元", "備註": "[(45,800x43.00x1.55%)x(1+3.68%)]"}, {"區塊": "勞退個人專戶", "項目": "預估個人專戶累積本金及收益總額", "數值": "7851620", "單位": "元", "備註": ""}, {"區塊": "勞退個人專戶", "項目": "預計申請年齡", "數值": "65", "單位": "歲", "備註": ""}, {"區塊": "勞退個人專戶", "項目": "平均餘命", "數值": "19", "單位": "年", "備註": ""}, {"區塊": "勞退個人專戶", "項目": "首期月退休金", "數值": "38285", "單位": "元", "備註": ""}, {"區塊": "勞退個人專戶", "項目": "季發(3個月)月退休金", "數值": "114855", "單位": "元", "備註": ""}]};
+const TABS=['總覽','銀行','支出分類','特殊固定支出','勞退 · 老年給付','退休金試算'];
+const PAL=['#b5765a','#7d8f77','#d3a96a','#8a9fb0','#a98aa0','#c9b79c','#6f7a6a','#d08c8c'];
+let D=null,editing=false,PW='',dirty=false,page=0,sub=0;
+const $=s=>document.querySelector(s);
+const n=v=>Number(v)||0,fmt=v=>Math.round(n(v)).toLocaleString('en-US'),pct=v=>(v*100).toFixed(1)+'%';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sum=(a,f)=>a.reduce((s,r)=>s+n(f(r)),0);
+const L=k=>()=>D[k].map(r=>Object.values(r)[0]).filter(Boolean);
+const cats=L('categories'),banks=()=>D.banks.map(r=>r.銀行).filter(Boolean),srcs=L('sources');
+const NEW={income:{項目:'',金額:'',倍數:1,備註:''},expense:{類別:'',項目:'',月支出:'',年支出:'',銀行:''},bonus:{類別:'',項目:'',年額:'',來源:'',銀行:''},supplies:{項目:'',單價:'',次數:1},moto:{項目:'',單價:'',次數:1,備註:''},banks:{銀行:'',每月領出:0},categories:{類別:''},sources:{來源:''}};
+const incY=r=>n(r.金額)*n(r.倍數),eY=r=>n(r.年支出);
+const catY=c=>sum(D.expense.filter(r=>r.類別===c),eY)+sum(D.bonus.filter(r=>r.類別===c),r=>r.年額);
+
+// 通用表格：cols = {k,l,t:text|num|sel,o:選項函式,f:計算欄函式,cls}
+function tbl(key,cols,foot=''){
+  const rows=D[key];
+  let h='<div class="tw"><table><tr>'+cols.map(c=>`<th class="${c.t==='num'||c.f?'r':''}">${c.l||c.k}</th>`).join('')+(editing?'<th></th>':'')+'</tr>';
+  rows.forEach((r,i)=>{
+    h+='<tr>'+cols.map(c=>{
+      if(c.f)return `<td class="r">${c.f(r,i)}</td>`;
+      const v=r[c.k],a=`data-t="${key}" data-i="${i}" data-k="${c.k}"`;
+      if(!editing||c.ro)return c.t==='num'?`<td class="r">${v===''?'':fmt(v)}</td>`:`<td class="${c.k==='備註'?'note':''}">${esc(v)}</td>`;
+      if(c.t==='num')return `<td><input type="number" step="any" value="${esc(v)}" ${a}></td>`;
+      if(c.t==='sel'){let o=c.o();if(v&&!o.includes(v))o=[v,...o];return `<td><select ${a}><option value=""></option>${o.map(x=>`<option${x===v?' selected':''}>${esc(x)}</option>`).join('')}</select></td>`}
+      return `<td><input value="${esc(v)}" ${a}></td>`;
+    }).join('')+(editing?`<td><button class="x" data-del="${key}:${i}">✕</button></td>`:'')+'</tr>';
+  });
+  h+=foot+'</table></div>';
+  if(editing)h+=`<button class="add" data-add="${key}">＋ 新增一列</button>`;
+  return h;
+}
+const IC={house:'M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6',shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4',cup:'M5 8h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5zM17 10h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2',music:'M9 18V6l10-2v12M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM19 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z',book:'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M8 7h7',heart:'M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z',coin:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM9 10h6M9 14h6',leaf:'M5 19c0-9 5-14 14-14 0 9-5 14-14 14zM5 19l8-8',bank:'M3 9l9-5 9 5zM5 9v8M9 9v8M15 9v8M19 9v8M3 20h18'};
+const icn=(k,s=18)=>`<svg class="ic" viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="${IC[k]||IC.leaf}"/></svg>`;
+const catIcon=n=>n.includes('貸款')?'house':n.includes('保')?'shield':n.includes('生活')?'cup':n.includes('娛樂')?'music':n.includes('學習')?'book':n.includes('孝親')?'heart':n.includes('儲蓄')?'coin':'leaf';
+const S=(t,body,sub='',ic='leaf')=>`<section><h2>${icn(ic)}${t}<small>${sub}</small></h2>${body}</section>`;
+const tot=(cells)=>'<tr class="tot">'+cells.map((c,i)=>`<td class="${i?'r':''}">${c}</td>`).join('')+'</tr>';
+
+function pie(items,total){
+  if(!total)return '';
+  let a=-Math.PI/2,h='';
+  items.forEach((x,i)=>{
+    if(x.v<=0)return;const col=PAL[i%PAL.length],f=x.v/total;
+    if(f>=.9999){h+=`<circle cx="100" cy="100" r="92" fill="${col}"/>`;return}
+    const b=a+f*2*Math.PI,p=(q,r)=>[100+92*Math.cos(q),100+92*Math.sin(q)];
+    const[x1,y1]=p(a),[x2,y2]=p(b);
+    h+=`<path d="M100 100L${x1} ${y1}A92 92 0 ${f>.5?1:0} 1 ${x2} ${y2}Z" fill="${col}" stroke="#fbf8f2" stroke-width="2"><title>${esc(x.n)} ${pct(f)}</title></path>`;a=b;
+  });
+  return `<svg viewBox="0 0 200 200" width="230" height="230">${h}<circle cx="100" cy="100" r="50" fill="#fbf8f2"/><text x="100" y="96" text-anchor="middle" font-size="10" fill="#8a8378">總開銷(年)</text><text x="100" y="115" text-anchor="middle" font-size="15" fill="#3d3a35">${fmt(total)}</text></svg>`;
+}
+const salIdx=()=>{const i=D.income.findIndex(r=>r.項目==='薪水');return i<0?0:i};
+const mapExp=(r,i)=>i===salIdx()?sum(D.expense,eY):srcs().includes(r.項目)?sum(D.bonus.filter(x=>x.來源===r.項目),x=>x.年額):0;
+const pages=[
+()=>{ // 第一頁
+  const Y=sum(D.income,incY),E=D.income.reduce((s,r,i)=>s+mapExp(r,i),0);
+  const inc=tbl('income',[{k:'項目',t:'text'},{k:'金額',t:'num'},{k:'倍數',l:'每年次數',t:'num'},{l:'年收入',f:r=>fmt(incY(r))},{l:'總支出',f:(r,i)=>fmt(mapExp(r,i))},{l:'餘額',f:(r,i)=>fmt(incY(r)-mapExp(r,i))}],tot(['合計','','',fmt(Y),fmt(E),fmt(Y-E)]));
+  const items=D.categories.map(c=>({n:c.類別,v:catY(c.類別)})),total=sum(items,x=>x.v);
+  const lg=items.map((x,i)=>`<div><span style="color:${PAL[i%PAL.length]}">${icn(catIcon(x.n),20)}</span>${esc(x.n)}<u>${fmt(x.v/12)}</u><b>${fmt(x.v)}</b><em>${total?pct(x.v/total):'-'}</em></div>`).join('')+`<div style="border:none;font-weight:600"><span style="width:20px"></span>合計<u style="color:inherit">${fmt(total/12)}</u><b>${fmt(total)}</b><em>${total?'100%':''}</em></div>`;
+  return S('收入與支出',inc,'薪水對應月支出，季獎金／年終對應獎金分配','coin')+S('各類別占比',`<div class="pie">${pie(items,total)}<div class="lg"><div style="color:var(--mute);font-size:12px"><span style="width:20px"></span>類別<u>月平均</u><b>年支出</b><em>占比</em></div>${lg}</div></div>`,'含支出與獎金分配','leaf');
+},
+()=>{ // 第二頁
+  const rows=D.banks.map((b,i)=>{const yr=sum(D.expense.filter(r=>r.銀行===b.銀行),eY);return `<tr><td>${icn('bank',15)}${esc(b.銀行)}</td><td class="r">${fmt(yr)}</td><td class="r">${fmt(yr/12)}</td><td class="${editing?'':'r'}">${editing?`<input type="number" value="${esc(b.每月領出)}" data-t="banks" data-i="${i}" data-k="每月領出">`:fmt(b.每月領出)}</td></tr>`}).join('');
+  const bk=`<div class="tw"><table><tr><th>銀行</th><th class="r">年額</th><th class="r">月額</th><th class="r">每月領出</th></tr>${rows}${tot(['加總',fmt(sum(D.expense,eY)),fmt(sum(D.expense,eY)/12),fmt(sum(D.banks,r=>r.每月領出))])}</table></div>`;
+  const ss=srcs(),r2=banks().map(b=>({b,v:ss.map(s=>sum(D.bonus.filter(r=>r.銀行===b&&r.來源===s),r=>r.年額))})).filter(x=>x.v.some(Boolean));
+  const cs=ss.map((s,j)=>sum(r2,x=>x.v[j]));
+  const bb=`<div class="tw"><table><tr><th>銀行</th>${ss.map(s=>`<th class="r">${esc(s)}</th>`).join('')}<th class="r">合計</th></tr>${r2.map(x=>`<tr><td>${icn('bank',15)}${esc(x.b)}</td>${x.v.map(v=>`<td class="r">${v?fmt(v):''}</td>`).join('')}<td class="r">${fmt(x.v.reduce((a,b)=>a+b,0))}</td></tr>`).join('')}${tot(['加總',...cs.map(fmt),fmt(sum(cs,x=>x))])}</table></div>`;
+  return S('各銀行扣款與每月領出',bk,'年額 ÷ 12 為月額','bank')+S('獎金入帳（依銀行）',bb,'獎金分配進各銀行的金額','coin');
+},
+()=>{ // 第三頁
+  const st=`<div class="tabs sub">${['月支出','獎金分配'].map((x,i)=>`<button class="${i===sub?'on':''}" data-s="${i}">${x}</button>`).join('')}</div>`;
+  if(sub===0){
+    const avg=sum(D.expense,eY)/12,pay=n(D.income[salIdx()]&&D.income[salIdx()].金額),bal=pay-avg;
+    const foot=tot(['','平均月支出',fmt(avg),'月餘額　'+fmt(bal),'年餘額　'+fmt(bal*12)]);
+    return st+S('月支出',tbl('expense',[{k:'類別',t:'sel',o:cats},{k:'項目',t:'text'},{k:'月支出',t:'num'},{k:'年支出',t:'num'},{k:'銀行',l:'銀行／備註',t:'sel',o:banks}],foot),'修改月支出會自動換算年支出；月餘額＝月薪 − 平均月支出，年餘額＝月餘額 × 12');
+  }
+  const chips=srcs().map(s=>`<span>${esc(s)}　${fmt(sum(D.bonus.filter(r=>r.來源===s),r=>r.年額))}</span>`).join('');
+  const al=sum(D.bonus,r=>r.年額),bi=sum(D.income.filter(r=>srcs().includes(r.項目)),incY);
+  const foot=tot(['加總','',fmt(al),'獎金收入　'+fmt(bi),'年餘額　'+fmt(bi-al)]);
+  return st+S('獎金分配',`<div class="chips">${chips}</div>`+tbl('bonus',[{k:'類別',t:'sel',o:cats},{k:'項目',t:'text'},{k:'年額',t:'num'},{k:'來源',t:'sel',o:srcs},{k:'銀行',t:'sel',o:banks}],foot),'依來源小計；各銀行入帳請見「銀行」頁籤','coin');
+},
+()=>{ // 第四頁
+  const m=k=>fmt(sum(D[k],r=>n(r.單價)*n(r.次數))/12);
+  const yc={l:'支出(年)',f:r=>fmt(n(r.單價)*n(r.次數))};
+  return S('生活用品',tbl('supplies',[{k:'項目',t:'text'},{k:'單價',t:'num'},{k:'次數',l:'年次數',t:'num'},yc],tot(['加總 ÷ 12 ＝ 月均','','',m('supplies')])))
+   +S('機車保養',tbl('moto',[{k:'項目',t:'text'},{k:'單價',t:'num'},{k:'次數',l:'年次數',t:'num'},yc,{k:'備註',t:'text'}],tot(['加總 ÷ 12 ＝ 月均','','',m('moto'),''])));
+},
+()=>{ // 勞退 · 老年給付
+  const gs=[...new Set(D.pension.map(r=>r.區塊))];
+  return gs.map((g,gi)=>{
+    const rs=D.pension.filter(r=>r.區塊===g),d=rs.find(r=>r.項目==='試算日期');
+    const body=rs.filter(r=>r!==d).map(r=>{
+      const s=String(r.數值??'').trim(),v=r.單位&&/^[\d,]+(\.\d+)?$/.test(s)?fmt(s.replace(/,/g,'')):esc(s);
+      return `<div class="kv"><span>${esc(r.項目)}</span><b>${v}${r.單位?`<small>${esc(r.單位)}</small>`:''}</b>${r.備註?`<span class="note">${esc(r.備註)}</span>`:''}</div>`}).join('');
+    return S(esc(g),body+(g.includes('勞退')?'<div class="tip">※ 勞退個人專戶已包含老年給付</div>':''),d?'試算日期 '+esc(d.數值):'',gi?'bank':'coin');
+  }).join('');
+},
+()=>{ // 退休金試算
+  const Y=sum(D.rincome,r=>n(r.月收入)*n(r.倍數)),E=sum(D.rexpense,eY),bal=Y/12-E/12,fd=D.rincome.find(r=>r.項目==='定存');
+  const inc=tbl('rincome',[{k:'項目',t:'text'},{k:'月收入',t:'num'},{k:'倍數',l:'年收入倍數',t:'num'},{l:'年收入',f:r=>fmt(n(r.月收入)*n(r.倍數))},{k:'備註',t:'text'}],tot(['年收入','','',fmt(Y),''])+tot(['平均月收入','','',fmt(Y/12),''])+(fd?tot(['35歲開始月存','','',fmt(fd.月收入),'']):''));
+  const exp=tbl('rexpense',[{k:'大類別',t:'text'},{k:'類別',t:'text'},{k:'項目',t:'text'},{k:'月支出',t:'num'},{k:'年支出',t:'num'}],tot(['年開銷 ／ 平均月支出','','',fmt(E/12),fmt(E)])+tot(['餘額（平均月收入 − 平均月支出）','','',fmt(bal),fmt(bal*12)]));
+  const items=[...new Set(D.rexpense.map(r=>r.大類別))].map(c=>({n:c,v:sum(D.rexpense.filter(r=>r.大類別===c),eY)})),total=sum(items,x=>x.v);
+  const lg=items.map((x,i)=>`<div><span style="color:${PAL[i%PAL.length]}">${icn(catIcon(x.n),20)}</span>${esc(x.n)}<u>${fmt(x.v/12)}</u><b>${fmt(x.v)}</b><em>${total?pct(x.v/total):'-'}</em></div>`).join('');
+  const lv=tbl('rtable',[{k:'月薪',l:'投保月薪',t:'num'},{l:'每月需自存',f:r=>n(r.每月需自存)?fmt(r.每月需自存):'無需自存'}]);
+  return S('退休後收入',inc,'月收入 × 倍數 ＝ 年收入','coin')+S('退休收支平衡投保級距與自存對照表',lv,'','shield')+S('退休後支出',exp,'餘額：左為每月，右為每年','cup')+S('支出占比',`<div class="pie">${pie(items,total)}<div class="lg"><div style="color:var(--mute);font-size:12px"><span style="width:20px"></span>類別<u>月平均</u><b>年支出</b><em>占比</em></div>${lg}</div></div>`,'依大類別','leaf');
+}
+];
+
+function render(){
+  const names=editing?[...TABS,'選項管理']:TABS;
+  if(page>=names.length)page=0;
+  $('#tabs').innerHTML=names.map((t,i)=>`<button class="${i===page?'on':''}" data-p="${i}">${t}</button>`).join('');
+  $('#main').innerHTML=D?pages[page]():'<p class="msg">讀取中…</p>';
+}
+const say=t=>$('#msg').textContent=t;
+async function api(body){
+  const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});
+  return r.json();
+}
+async function load(){
+  if(!API_URL){D=JSON.parse(JSON.stringify(SEED));say('示範資料（尚未連接試算表）');render();return}
+  try{const r=await fetch(API_URL);D=await r.json();if(D.error)throw new Error(D.error);for(const k in SEED)if(!Array.isArray(D[k])||(['pension','rincome','rexpense','rtable'].includes(k)&&!D[k].length))D[k]=JSON.parse(JSON.stringify(SEED[k]));say('');}
+  catch(e){console.error(e);D=JSON.parse(JSON.stringify(SEED));say('讀取試算表失敗，顯示示範資料（'+String(e.message).slice(0,60)+'）');}
+  render();
+}
+document.addEventListener('click',async e=>{
+  const t=e.target,d=t.dataset;
+  if(d.p!==undefined){page=+d.p;render()}
+  if(d.s!==undefined){sub=+d.s;render()}
+  if(d.add){D[d.add].push({...NEW[d.add]});dirty=true;render()}
+  if(d.del){const[k,i]=d.del.split(':');if(confirm('刪除這一列？')){D[k].splice(+i,1);dirty=true;render()}}
+});
+document.addEventListener('change',e=>{
+  const d=e.target.dataset;if(!d.t)return;
+  const r=D[d.t][+d.i],v=e.target.value;
+  r[d.k]=e.target.type==='number'?(v===''?'':+v):v;
+  if(d.t==='expense'&&d.k==='月支出'&&v!=='')r.年支出=n(v)*12;
+  dirty=true;render();
+});
+$('#bRef').onclick=()=>{D=null;render();load()};
+load();
+</script>
+</body>
+</html>
