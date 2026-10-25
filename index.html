@@ -106,15 +106,18 @@ const tot=(cells)=>'<tr class="tot">'+cells.map((c,i)=>`<td class="${i?'r':''}">
 
 function pie(items,total){
   if(!total)return '';
-  let a=-Math.PI/2,h='';
+  let a=-Math.PI/2,h='',ic='';
   items.forEach((x,i)=>{
-    if(x.v<=0)return;const col=PAL[i%PAL.length],f=x.v/total;
-    if(f>=.9999){h+=`<circle cx="100" cy="100" r="92" fill="${col}"/>`;return}
-    const b=a+f*2*Math.PI,p=(q,r)=>[100+92*Math.cos(q),100+92*Math.sin(q)];
-    const[x1,y1]=p(a),[x2,y2]=p(b);
-    h+=`<path d="M100 100L${x1} ${y1}A92 92 0 ${f>.5?1:0} 1 ${x2} ${y2}Z" fill="${col}" stroke="#fbf8f2" stroke-width="2"><title>${esc(x.n)} ${pct(f)}</title></path>`;a=b;
+    if(x.v<=0)return;const col=PAL[i%PAL.length],f=x.v/total,m=a+f*Math.PI;
+    if(f>=.9999){h+=`<circle cx="100" cy="100" r="92" fill="${col}"/>`}
+    else{
+      const b=a+f*2*Math.PI,[x1,y1]=[100+92*Math.cos(a),100+92*Math.sin(a)],[x2,y2]=[100+92*Math.cos(b),100+92*Math.sin(b)];
+      h+=`<path d="M100 100L${x1} ${y1}A92 92 0 ${f>.5?1:0} 1 ${x2} ${y2}Z" fill="${col}" stroke="#fbf8f2" stroke-width="2"><title>${esc(x.n)} ${pct(f)}</title></path>`;a=b;
+    }
+    const cx=100+112*Math.cos(m),cy=100+112*Math.sin(m);   // 圓餅外圍的類別圖示
+    ic+=`<g transform="translate(${cx-11} ${cy-11}) scale(.917)" fill="none" stroke="#3d3a35" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="13" fill="#fbf8f2" stroke="${col}" stroke-width="1.5"/><path d="${IC[catIcon(x.n)]||IC.leaf}"/></g>`;
   });
-  return `<svg viewBox="0 0 200 200" width="230" height="230">${h}<circle cx="100" cy="100" r="50" fill="#fbf8f2"/><text x="100" y="96" text-anchor="middle" font-size="10" fill="#8a8378">總開銷(年)</text><text x="100" y="115" text-anchor="middle" font-size="15" fill="#3d3a35">${fmt(total)}</text></svg>`;
+  return `<svg viewBox="-36 -36 272 272" width="280" height="280" style="max-width:100%;height:auto">${h}<circle cx="100" cy="100" r="50" fill="#fbf8f2"/><text x="100" y="96" text-anchor="middle" font-size="10" fill="#8a8378">總開銷(年)</text><text x="100" y="115" text-anchor="middle" font-size="15" fill="#3d3a35">${fmt(total)}</text>${ic}</svg>`;
 }
 // 來源可加編號（季獎金1、季獎金2…），一律歸入開頭相符的來源（季獎金）
 const srcOf=r=>{const v=String(r.來源??'').trim();return srcs().filter(s=>v.startsWith(s)).sort((a,b)=>b.length-a.length)[0]||v};
@@ -131,8 +134,8 @@ const pages=[
 ()=>{ // 第二頁
   const rows=D.banks.map((b,i)=>{const yr=sum(D.expense.filter(r=>r.銀行===b.銀行),eY);return `<tr><td>${icn('bank',15)}${esc(b.銀行)}</td><td class="r">${fmt(yr)}</td><td class="r">${fmt(yr/12)}</td><td class="${editing?'':'r'}">${editing?`<input type="number" value="${esc(b.每月領出)}" data-t="banks" data-i="${i}" data-k="每月領出">`:fmt(b.每月領出)}</td></tr>`}).join('');
   const bk=`<div class="tw"><table><tr><th>銀行</th><th class="r">年額</th><th class="r">月額</th><th class="r">每月領出</th></tr>${rows}${tot(['加總',fmt(sum(D.expense,eY)),fmt(sum(D.expense,eY)/12),fmt(sum(D.banks,r=>r.每月領出))])}</table></div>`;
-  const pay=n(D.income[salIdx()]&&D.income[salIdx()].金額),dk=sum(D.expense.filter(r=>String(r.類別).includes('貸款')),r=>r.月支出);
-  const lim=`<div style="text-align:right;margin-top:10px">每月領取上限：月薪 ${fmt(pay)} − 扣款 ${fmt(dk)} = <b>${fmt(pay-dk)}</b><div class="note">扣款＝貸款類別的每月支出合計</div></div>`;
+  const pay=n(D.income[salIdx()]&&D.income[salIdx()].金額),dk=sum(D.expense.filter(r=>r.銀行==='合作金庫'),r=>r.月支出===''?n(r.年支出)/12:r.月支出);
+  const lim=`<div style="text-align:right;margin-top:10px">每月領取上限：月薪 ${fmt(pay)} − 扣款 ${fmt(dk)} = <b>${fmt(pay-dk)}</b><div class="note">扣款＝每月從合作金庫支出的合計</div></div>`;
   const ss=srcs(),r2=banks().map(b=>({b,v:ss.map(s=>sum(D.bonus.filter(r=>r.銀行===b&&srcOf(r)===s),r=>r.年額))})).filter(x=>x.v.some(Boolean));
   const cs=ss.map((s,j)=>sum(r2,x=>x.v[j]));
   const bb=`<div class="tw"><table><tr><th>銀行</th>${ss.map(s=>`<th class="r">${esc(s)}</th>`).join('')}<th class="r">合計</th></tr>${r2.map(x=>`<tr><td>${icn('bank',15)}${esc(x.b)}</td>${x.v.map(v=>`<td class="r">${v?fmt(v):''}</td>`).join('')}<td class="r">${fmt(x.v.reduce((a,b)=>a+b,0))}</td></tr>`).join('')}${tot(['加總',...cs.map(fmt),fmt(sum(cs,x=>x))])}</table></div>`;
