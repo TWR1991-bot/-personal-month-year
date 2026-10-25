@@ -116,8 +116,10 @@ function pie(items,total){
   });
   return `<svg viewBox="0 0 200 200" width="230" height="230">${h}<circle cx="100" cy="100" r="50" fill="#fbf8f2"/><text x="100" y="96" text-anchor="middle" font-size="10" fill="#8a8378">總開銷(年)</text><text x="100" y="115" text-anchor="middle" font-size="15" fill="#3d3a35">${fmt(total)}</text></svg>`;
 }
+// 來源可加編號（季獎金1、季獎金2…），一律歸入開頭相符的來源（季獎金）
+const srcOf=r=>{const v=String(r.來源??'').trim();return srcs().filter(s=>v.startsWith(s)).sort((a,b)=>b.length-a.length)[0]||v};
 const salIdx=()=>{const i=D.income.findIndex(r=>r.項目==='薪水');return i<0?0:i};
-const mapExp=(r,i)=>i===salIdx()?sum(D.expense,eY):srcs().includes(r.項目)?sum(D.bonus.filter(x=>x.來源===r.項目),x=>x.年額):0;
+const mapExp=(r,i)=>i===salIdx()?sum(D.expense,eY):srcs().includes(r.項目)?sum(D.bonus.filter(x=>srcOf(x)===r.項目),x=>x.年額):0;
 const pages=[
 ()=>{ // 第一頁
   const Y=sum(D.income,incY),E=D.income.reduce((s,r,i)=>s+mapExp(r,i),0);
@@ -129,10 +131,12 @@ const pages=[
 ()=>{ // 第二頁
   const rows=D.banks.map((b,i)=>{const yr=sum(D.expense.filter(r=>r.銀行===b.銀行),eY);return `<tr><td>${icn('bank',15)}${esc(b.銀行)}</td><td class="r">${fmt(yr)}</td><td class="r">${fmt(yr/12)}</td><td class="${editing?'':'r'}">${editing?`<input type="number" value="${esc(b.每月領出)}" data-t="banks" data-i="${i}" data-k="每月領出">`:fmt(b.每月領出)}</td></tr>`}).join('');
   const bk=`<div class="tw"><table><tr><th>銀行</th><th class="r">年額</th><th class="r">月額</th><th class="r">每月領出</th></tr>${rows}${tot(['加總',fmt(sum(D.expense,eY)),fmt(sum(D.expense,eY)/12),fmt(sum(D.banks,r=>r.每月領出))])}</table></div>`;
-  const ss=srcs(),r2=banks().map(b=>({b,v:ss.map(s=>sum(D.bonus.filter(r=>r.銀行===b&&r.來源===s),r=>r.年額))})).filter(x=>x.v.some(Boolean));
+  const pay=n(D.income[salIdx()]&&D.income[salIdx()].金額),dk=sum(D.expense.filter(r=>String(r.類別).includes('貸款')),r=>r.月支出);
+  const lim=`<div style="text-align:right;margin-top:10px">每月領取上限：月薪 ${fmt(pay)} − 扣款 ${fmt(dk)} = <b>${fmt(pay-dk)}</b><div class="note">扣款＝貸款類別的每月支出合計</div></div>`;
+  const ss=srcs(),r2=banks().map(b=>({b,v:ss.map(s=>sum(D.bonus.filter(r=>r.銀行===b&&srcOf(r)===s),r=>r.年額))})).filter(x=>x.v.some(Boolean));
   const cs=ss.map((s,j)=>sum(r2,x=>x.v[j]));
   const bb=`<div class="tw"><table><tr><th>銀行</th>${ss.map(s=>`<th class="r">${esc(s)}</th>`).join('')}<th class="r">合計</th></tr>${r2.map(x=>`<tr><td>${icn('bank',15)}${esc(x.b)}</td>${x.v.map(v=>`<td class="r">${v?fmt(v):''}</td>`).join('')}<td class="r">${fmt(x.v.reduce((a,b)=>a+b,0))}</td></tr>`).join('')}${tot(['加總',...cs.map(fmt),fmt(sum(cs,x=>x))])}</table></div>`;
-  return S('各銀行扣款與每月領出',bk,'年額 ÷ 12 為月額','bank')+S('獎金入帳（依銀行）',bb,'獎金分配進各銀行的金額','coin');
+  return S('各銀行扣款與每月領出',bk+lim,'年額 ÷ 12 為月額','bank')+S('獎金入帳（依銀行）',bb,'獎金分配進各銀行的金額','coin');
 },
 ()=>{ // 第三頁
   const st=`<div class="tabs sub">${['月支出','獎金分配'].map((x,i)=>`<button class="${i===sub?'on':''}" data-s="${i}">${x}</button>`).join('')}</div>`;
@@ -141,7 +145,7 @@ const pages=[
     const foot=tot(['','平均月支出',fmt(avg),'月餘額　'+fmt(bal),'年餘額　'+fmt(bal*12)]);
     return st+S('月支出',tbl('expense',[{k:'類別',t:'sel',o:cats},{k:'項目',t:'text'},{k:'月支出',t:'num'},{k:'年支出',t:'num'},{k:'銀行',l:'銀行／備註',t:'sel',o:banks}],foot),'修改月支出會自動換算年支出；月餘額＝月薪 − 平均月支出，年餘額＝月餘額 × 12');
   }
-  const chips=srcs().map(s=>`<span>${esc(s)}　${fmt(sum(D.bonus.filter(r=>r.來源===s),r=>r.年額))}</span>`).join('');
+  const chips=srcs().map(s=>`<span>${esc(s)}　${fmt(sum(D.bonus.filter(r=>srcOf(r)===s),r=>r.年額))}</span>`).join('');
   const al=sum(D.bonus,r=>r.年額),bi=sum(D.income.filter(r=>srcs().includes(r.項目)),incY);
   const foot=tot(['加總','',fmt(al),'獎金收入　'+fmt(bi),'年餘額　'+fmt(bi-al)]);
   return st+S('獎金分配',`<div class="chips">${chips}</div>`+tbl('bonus',[{k:'類別',t:'sel',o:cats},{k:'項目',t:'text'},{k:'年額',t:'num'},{k:'來源',t:'sel',o:srcs},{k:'銀行',t:'sel',o:banks}],foot),'依來源小計；各銀行入帳請見「銀行」頁籤','coin');
